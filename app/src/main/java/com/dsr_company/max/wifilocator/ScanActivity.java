@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -59,7 +60,7 @@ public class ScanActivity extends Activity {
 
     private View.OnClickListener scanButtonListener = new View.OnClickListener() {
         public void onClick(View v) {
-            if (wifi.isWifiEnabled() == false) {
+            if (!wifi.isWifiEnabled()) {
                 Toast.makeText(getApplicationContext(), "wifi is disabled..making it enabled", Toast.LENGTH_LONG).show();
                 wifi.setWifiEnabled(true);
             }
@@ -71,8 +72,7 @@ public class ScanActivity extends Activity {
     };
 
     private String listToString(List<Integer> integerList) {
-        String s = Joiner.on(',').join(integerList);
-        return s;
+        return Joiner.on(',').join(integerList);
     }
 
     private View.OnClickListener saveButtonListener = new View.OnClickListener() {
@@ -81,6 +81,8 @@ public class ScanActivity extends Activity {
             unregisterReceiver(wifiScanBroadcastReceiver);
             for (Map.Entry<String, List<Integer>> entry : wifiMap.entrySet()) {
                 Log.i(TAG, entry.getKey() + " " + listToString(entry.getValue()));
+                WiFiScanInfo info = new WiFiScanInfo(entry.getKey(), entry.getValue());
+                Log.i(TAG, info.toString());
             }
         }
     };
